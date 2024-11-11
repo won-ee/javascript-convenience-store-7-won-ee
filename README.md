@@ -291,9 +291,92 @@ N
   }
   ```
 
-## 로직설계
+로직 설계를 보강하고 각 메서드 이름과 설명을 세분화했습니다.
+
+---
+
+## 로직 설계
+
 ### InputView 클래스
+사용자의 입력을 받아 처리하는 클래스입니다.
+
+- **getProductAndQuantityInput**: 구매하고자 하는 상품명과 수량을 입력받습니다.
+    ```javascript
+    구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])
+    ```
+
+- **askMembershipDiscount**: 멤버십 할인을 받을지 여부를 묻습니다.
+    ```javascript
+    멤버십 할인을 받으시겠습니까? (Y/N)
+    ```
+
+- **askAdditionalPurchase**: 추가 구매 의사가 있는지 확인합니다.
+    ```javascript
+    감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)
+    ```
+
 ### OutputView 클래스
-### 재고 관리 클래스
-### 프로모션 할인 클래스
-### 프로모션 할인 클래스
+프로그램의 결과를 사용자에게 출력하는 클래스입니다.
+
+- **displayAvailableProducts**: 현재 보유 중인 상품 리스트를 출력합니다.
+    ```javascript
+    안녕하세요. W편의점입니다.
+    현재 보유하고 있는 상품입니다.
+    ...
+    ```
+
+- **displayReceipt**: 구입한 제품 영수증을 출력합니다.
+    ```javascript
+    ==============W 편의점================
+    상품명		수량	금액
+    콜라		3 	3,000
+    ...
+    내실돈			 9,000
+    ```
+
+### InputValidator 클래스
+입력값의 유효성을 검증하는 클래스입니다.
+
+- **validateProductName**: 입력받은 상품명이 유효한지 검사합니다.
+
+- **validateQuantity**: 입력받은 수량의 유효성을 검사합니다.
+
+- **validateMembershipInput**: 멤버십 할인에 대한 입력이 유효한지 검사합니다.
+
+- **validateAdditionalPurchaseInput**: 추가 구매 의사 입력이 유효한지 검사합니다.
+
+### ProductManager 클래스
+제품의 정보와 재고를 관리하는 클래스입니다.
+
+- **loadProducts**: `public/products.md`에서 상품 목록을 불러와 관리합니다.
+
+- **checkProductStock(productName, quantity)**: 특정 상품의 재고가 충분한지 확인합니다.
+  
+- **updateStock(productName, quantity)**: 구매 후 상품 재고를 업데이트합니다.
+
+### PromotionManager 클래스
+프로모션 할인 규칙을 관리하고 적용하는 클래스입니다.
+
+- **loadPromotions**: `public/promotions.md`에서 프로모션 목록을 불러와 관리합니다.
+
+- **applyPromotions(order)**: 프로모션이 적용되는 제품을 확인하여 할인 금액을 계산합니다.
+  
+- **calculateEventDiscount(product, quantity)**: 특정 프로모션(예: '2+1', '반짝할인')이 적용되는지 판단하고, 적용된 할인 금액을 반환합니다.
+
+### OrderManager 클래스
+사용자의 주문을 관리하는 클래스입니다.
+
+- **createOrder(productList)**: 사용자가 선택한 상품 및 수량을 바탕으로 주문 객체를 생성합니다.
+  
+- **calculateTotalAmount(order)**: 주문 총액을 계산합니다.
+  
+- **applyOrderPromotions(order)**: 주문에 프로모션 할인을 적용합니다.
+  
+- **getOrderSummary(order)**: 주문의 요약 정보를 생성하여 영수증 출력을 위한 데이터를 반환합니다.
+
+### MembershipManager 클래스
+멤버십 할인 관리를 담당하는 클래스입니다.
+
+- **applyMembershipDiscount(order)**: 멤버십 회원일 경우 프로모션 할인 후 남은 금액의 30%를 할인하여 최대 8,000원의 할인을 적용합니다.
+
+- **calculateMembershipDiscountAmount(total)**: 주문 총액에 대해 적용 가능한 멤버십 할인 금액을 계산하여 반환합니다.
